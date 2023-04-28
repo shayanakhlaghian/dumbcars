@@ -5,6 +5,7 @@ import {ethers} from 'ethers';
 
 import Button from '../ui/Button';
 import {contractAddress, abi} from '~/DumbCarsNFT.json';
+import {WagmiError} from '~/types';
 
 const MintForm = () => {
   const [counts, setCounts] = useState(1);
@@ -30,6 +31,9 @@ const MintForm = () => {
     write?.();
   };
 
+  const errorReason = (error as WagmiError)?.reason;
+  const errorMessage = errorReason?.split(':')[1];
+
   return (
     <form className='flex flex-col items-center' onSubmit={handleMint}>
       <input
@@ -41,7 +45,11 @@ const MintForm = () => {
         className='text-gray-800 py-1 px-3 mb-4'
       />
       <Button>Mint</Button>
-      {error && <p>{error.message}</p>}
+      {error && (
+        <p className='mt-8 text-red-800 font-bold border-b-2 pb-1 border-red-800'>
+          {errorMessage}
+        </p>
+      )}
     </form>
   );
 };
